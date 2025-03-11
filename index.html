@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بازی پازل تایلی</title>
+    <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* صفحه بازی */
+        .game-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .game-title {
+            font-size: 32px;
+            margin-bottom: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+
+        .tile {
+            width: 100px;
+            height: 100px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .tile:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .tile.empty {
+            background: transparent;
+            box-shadow: none;
+            cursor: default;
+        }
+
+        .tile.empty:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #ff4757;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .controls button:hover {
+            background: #ff6b81;
+        }
+
+        /* پیام برنده */
+        .win-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            font-weight: bold;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px 40px;
+            border-radius: 10px;
+            animation: zoomIn 0.5s ease-in-out;
+            display: none;
+        }
+
+        /* انیمیشن‌ها */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes zoomIn {
+            from { transform: translate(-50%, -50%) scale(0); }
+            to { transform: translate(-50%, -50%) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="game-title">بازی پازل تایلی</h1>
+        <div class="game-area" id="game-area">
+            <!-- تایل‌ها به صورت دینامیک اضافه می‌شوند -->
+        </div>
+        <div class="controls">
+            <button onclick="shuffleTiles()">بازی جدید</button>
+        </div>
+        <div class="win-message" id="win-message">هوراا شما برنده شدید!</div>
+    </div>
+
+    <script>
+        const gameArea = document.getElementById('game-area');
+        const winMessage = document.getElementById('win-message');
+        let tiles = [1, 2, 3, 4, 5, 6, 7, 8, null]; // null نشان‌دهنده تایل خالی است
+
+        // ایجاد تایل‌ها
+        function createTiles() {
+            gameArea.innerHTML = '';
+            tiles.forEach((tile, index) => {
+                const tileElement = document.createElement('div');
+                tileElement.classList.add('tile');
+                if (tile === null) {
+                    tileElement.classList.add('empty');
+                } else {
+                    tileElement.textContent = tile;
+                    tileElement.addEventListener('click', () => moveTile(index));
+                }
+                gameArea.appendChild(tileElement);
+            });
+            checkWin(); // بررسی برنده پس از هر حرکت
+        }
+
+        // حرکت تایل
+        function moveTile(index) {
+            const emptyIndex = tiles.indexOf(null);
+            const adjacentIndexes = [index - 1, index + 1, index - 3, index + 3];
+            if (adjacentIndexes.includes(emptyIndex)) {
+                [tiles[index], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[index]];
+                createTiles();
+            }
+        }
+
+        // به هم ریختن تایل‌ها
+        function shuffleTiles() {
+            winMessage.style.display = 'none'; // مخفی کردن پیام برنده
+            for (let i = tiles.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+            }
+            createTiles();
+        }
+
+        // بررسی برنده
+        function checkWin() {
+            const isWin = tiles.slice(0, -1).every((tile, index) => tile === index + 1);
+            if (isWin) {
+                winMessage.style.display = 'block'; // نمایش پیام برنده
+            }
+        }
+
+        // شروع بازی
+        shuffleTiles();
+    </script>
+</body>
+</html>
