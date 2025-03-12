@@ -23,6 +23,29 @@
             overflow: hidden;
         }
 
+                /* استایل برای container عکس */
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        /* استایل برای عکس */
+        .logo {
+            width: 45px; /* اندازه عرض عکس */
+            height: 45px; /* اندازه ارتفاع عکس */
+            border-radius: 50%; /* اگر می‌خوای عکس گرد باشه */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* سایه برای عکس */
+            transition: transform 0.3s ease; /* انیمیشن هنگام hover */
+        }
+
+        /* انیمیشن هنگام hover روی عکس */
+        .logo:hover {
+            transform: scale(1.1); /* بزرگ‌تر شدن عکس */
+        }
+
         /* صفحه بازی */
         .game-container {
             text-align: center;
@@ -129,6 +152,10 @@
     </style>
 </head>
 <body>
+    <!-- عکس بالای صفحه -->
+    <div class="logo-container">
+        <img src="https://example.com/your-image.jpg" alt="لوگو بازی" class="logo">
+    </div>
     <div class="game-container">
         <h1 class="game-title">اعداد را از چپ به راست بچینید</h1>
         <div class="game-area" id="game-area">
